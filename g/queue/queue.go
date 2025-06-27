@@ -9,3 +9,16 @@ type JobQueue struct {
 	jobs map[string]models.TranscodeJob
 	mu sync.Mutex
 }
+
+func (q *JobQueue) AddJob(job models.TranscodeJob) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	q.jobs[job.ID] = job
+}
+
+func (q *JobQueue) GetJob(id string) (models.TranscodeJob, bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	job, ok := q.jobs[id]
+	return job, ok
+}
