@@ -22,3 +22,13 @@ func (q *JobQueue) GetJob(id string) (models.TranscodeJob, bool) {
 	job, ok := q.jobs[id]
 	return job, ok
 }
+
+func (q *JobQueue) ListJobs() []models.TranscodeJob {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	var list []models.TranscodeJob
+	for _, job := range q.jobs {
+		list = append(list, job)
+	}
+	return list
+}
