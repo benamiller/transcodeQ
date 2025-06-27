@@ -1,0 +1,19 @@
+8# Compiled class file
+*.class
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Eclipse / IntelliJ / NetBeans IDE folders
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+nbproject/
+
