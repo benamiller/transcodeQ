@@ -35,9 +35,11 @@ func (api *API) JobsHandler(w http.ResponseWriter, r *http.Request) {
 		if id != "" && format != "" {
 			api.GetJobFormatStatusHandler(w, r)
 			return
+		}
 		if id != "" {
 			api.GetJobHandler(w, r)
 			return
+		}
 		api.ListJobsHandler(w, r)
 		return
 	default:
