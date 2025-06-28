@@ -13,7 +13,7 @@ type API struct {
 
 func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 	var job models.TranscodeJob
-	err := json.NewDecoder(r.body).Decode(&job)
+	err := json.NewDecoder(r.Body).Decode(&job)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -25,3 +25,13 @@ func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(job)
 }
 	
+func (api *API) GetJobHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	job, ok := api.Queue.GetJob(id)
+	if !ok {
+		http.Error(w, "Job not found", http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(job)
+}
