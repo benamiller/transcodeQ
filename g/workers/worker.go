@@ -81,9 +81,10 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 			job.StatusMap[format] = models.StatusRetrying
 			job, err := retryFormat(job, format)
 			if err != nil {
-				job.StatusMap[format] = models.StatusCompleted
-			} else {
 				job.StatusMap[format] = models.StatusFailed
+				fmt.Printf("Job %s, format %s FAILED. %s\n", jobID, format, err)
+			} else {
+				job.StatusMap[format] = models.StatusCompleted
 				fmt.Printf("Job %s, format %s FAILED\n", jobID, format)
 			}
 		} else {
