@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+	"github.com/benamiller/transcodeQ/g/queue"
+	"github.com/benamiller/transcodeQ/g/api"
+)
 
 func main() {
-	fmt.Println("Hello from Go in transcodeQ repo!")
+	jobQueue := queue.NewJobQueue()
+	apiHandler := &api.API{Queue: jobQueue}
+
+	http.HandleFunc("/jobs", apiHandler.CreateJobHandler)
+
+	http.ListenAndServe(":8080", nil)
 }
