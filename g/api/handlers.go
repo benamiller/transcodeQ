@@ -72,6 +72,8 @@ func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 
 	api.Queue.AddJob(job)
 
+	go workers.ProcessJob(newID, api.Queue)
+
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(job)
 }
