@@ -10,11 +10,11 @@ import (
 
 func getIterationsForFormat(format string) int {
 	var formatIterations = map[string]int{
-		"240p": 10_000,
-		"360p": 30_000,
-		"480p": 50_000,
-		"720p": 100_000,
-		"1080p": 200_000,
+		"240p": 100,
+		"360p": 500,
+		"480p": 1000,
+		"720p": 3000,
+		"1080p": 6000,
 	}
 
 	if iters, ok := formatIterations[format]; ok {
