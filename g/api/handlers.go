@@ -15,7 +15,7 @@ type API struct {
 	nextID int
 }
 
-func (api *API) NextID() {
+func (api *API) NextID() string {
 	api.mu.Lock()
 	defer api.mu.Unlock()
 
