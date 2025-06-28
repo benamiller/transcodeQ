@@ -3,10 +3,15 @@ package workers
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"time"
 	"github.com/benamiller/transcodeQ/g/models"
 	"github.com/benamiller/transcodeQ/g/queue"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func getIterationsForFormat(format string) int {
 	var formatIterations = map[string]int{
@@ -34,6 +39,10 @@ func performWorkForFormat(format string) {
 	time.Sleep(500 * time.Millisecond)
 }
 
+func shouldFail() bool {
+	return rand.Float64() < 0.05
+}
+
 func ProcessJob(jobID string, q *queue.JobQueue) {
 	job, ok := q.GetJob(jobID)
 	if !ok {
@@ -49,10 +58,14 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 
 		performWorkForFormat(format)
 
-		job.StatusMap[format] = models.StatusCompleted
+		if (shouldFail()) {
+			fmt.Printf("Job %s, format %s FAILED\n", jobID, format)
+			job.StatusMap[format] = models.StatusFailed
+		} else {
+			fmt.Printf("Job %s, format %s succeeded\n", jobID, format)
+			job.StatusMap[format] = models.StatusCompleted
+		}
 
 		q.AddJob(job)
-
-		fmt.Printf("Job %s, format %s completed!\n", jobID, format)
 	}
 }
