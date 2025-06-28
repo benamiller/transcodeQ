@@ -54,10 +54,7 @@ func (api *API) GetJobHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) ListJobsHandler(w http.ResponseWriter, r *http.Request) {
-	jobs, ok := api.Queue.ListJobs()
-	if !ok {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
+	jobs := api.Queue.ListJobs()
 
 	json.NewEncoder(w).Encode(jobs)
 }
