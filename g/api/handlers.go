@@ -20,7 +20,7 @@ func (api *API) JobsHandler(w http.ResponseWriter, r *http.Request) {
 		if id != "" {
 			api.GetJobHandler(w, r)
 		} else {
-			api.GetAllJobsHandler(w, r)
+			api.ListJobsHandler(w, r)
 		}
 	default:
 		http.Error(w, "Method not supported", http.StatusMethodNotAllowed)
@@ -52,3 +52,13 @@ func (api *API) GetJobHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(job)
 }
+
+func (api *API) ListJobsHandler(w http.ResponseWriter, r *http.Request) {
+	jobs, ok := api.Queue.ListJobs()
+	if !ok {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+
+	json.NewEncoder(w).Encode(jobs)
+}
+	
