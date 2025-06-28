@@ -29,7 +29,10 @@ func (api *API) JobsHandler(w http.ResponseWriter, r *http.Request) {
 		api.CreateJobHandler(w, r)
 	case "GET":
 		id := r.URL.Query().Get("id")
-		if id != "" {
+		format := r.URL.Query().Get("format")
+		if id != "" && format != "" {
+			api.GetJobFormatStatusHandler(w, r)
+		} else if id != "" {
 			api.GetJobHandler(w, r)
 		} else {
 			api.ListJobsHandler(w, r)
@@ -76,6 +79,21 @@ func (api *API) GetJobHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(job)
+}
+
+func (api *API) GetJobFormatStatusHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	format := r.URL.Query().Get("format")
+
+	job, ok := api.Queue.GetJob(id)
+	if !ok {
+		http.Error(w, "Job not found", http.StatusNotFound)
+		return
+	}
+
+	status := job.StatusMap[format]
+
+	json.NewEncoder(w).Encode(status)
 }
 
 func (api *API) ListJobsHandler(w http.ResponseWriter, r *http.Request) {
