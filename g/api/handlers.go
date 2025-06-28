@@ -11,6 +11,23 @@ type API struct {
 	Queue *queue.JobQueue
 }
 
+func (api *API) JobsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		api.CreateJobHandler(w, r)
+	case "GET":
+		id := r.URL.Query().Get("id")
+		if id != "" {
+			api.GetJobHandler(w, r)
+		} else {
+			api.GetAllJobsHandler(w, r)
+		}
+	default:
+		http.Error(w, "Method not supported", http.StatusMethodNotAllowed)
+	}
+
+}
+
 func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 	var job models.TranscodeJob
 	err := json.NewDecoder(r.Body).Decode(&job)
