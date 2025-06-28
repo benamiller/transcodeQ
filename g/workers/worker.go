@@ -10,11 +10,11 @@ import (
 
 func getIterationsForFormat(format string) int {
 	var formatIterations = map[string]int{
-		"240p": 100,
-		"360p": 500,
-		"480p": 1000,
-		"720p": 3000,
-		"1080p": 6000,
+		"240p": 1000,
+		"360p": 5000,
+		"480p": 20_000,
+		"720p": 50_000,
+		"1080p": 100_000,
 	}
 
 	if iters, ok := formatIterations[format]; ok {
@@ -52,5 +52,7 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 		job.StatusMap[format] = models.StatusCompleted
 
 		q.AddJob(job)
+
+		fmt.Printf("Job %s, format %s completed!\n", jobID, format)
 	}
 }
