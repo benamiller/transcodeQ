@@ -58,16 +58,16 @@ func TestGetJobHandler(t *testing.T) {
 		Queue: q,
 	}
 
-	statusMap := map[string]JobStatus{
+	statusMap := map[string]models.JobStatus{
 		"720p": models.StatusCompleted,
-		"1080p": models.StatusQueued
+		"1080p": models.StatusQueued,
 	}
 
 	newJob := models.TranscodeJob{
-		ID	"1",
+		ID:	"1",
 		Title:	"Another video",
 		Formats: []string{"720p", "1080p"},
-		StatusMap: statusMap 
+		StatusMap: statusMap,
 	}
 
 	q.AddJob(newJob)
@@ -91,16 +91,16 @@ func TestGetJobHandler(t *testing.T) {
 		t.Errorf("expected job ID '1', got %s", fetched.ID)
 	}
 
-	if job.Title != "Another video" {
-		t.Errorf("expected title 'Another video', got %s", job.Title)
+	if fetched.Title != "Another video" {
+		t.Errorf("expected title 'Another video', got %s", fetched.Title)
 	}
 
-	if len(job.Formats) != 2 {
-		t.Errorf("expected 2 formats, got %d", len(job.Formats))
+	if len(fetched.Formats) != 2 {
+		t.Errorf("expected 2 formats, got %d", len(fetched.Formats))
 	}
 
-	if job.StatusMap["720p"] != models.StatusCompleted {
-		t.Errorf("expected 720p completed, got %s", job.StatusMap["720p"])
+	if fetched.StatusMap["720p"] != models.StatusCompleted {
+		t.Errorf("expected 720p completed, got %s", fetched.StatusMap["720p"])
 	}
 }
 
