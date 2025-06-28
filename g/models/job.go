@@ -7,7 +7,7 @@ const (
 	StatusProcessing	JobStatus = "processing"
 	StatusCompleted JobStatus = "completed"
 	StatusFailed	JobStatus = "failed"
-	StatusRetry	JobStatus = "retry"
+	StatusRetrying	JobStatus = "retrying"
 )
 
 type CreateTranscodeJobRequest struct {
