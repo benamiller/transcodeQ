@@ -43,6 +43,22 @@ func shouldFail() bool {
 	return rand.Float64() < 0.05
 }
 
+func retryFormat(job models.TranscodeJob) (TranscodeJob, Error) {
+	fmt.Printf("Job %s, format %s FAILED. Retrying %d more time(s)\n", jobID, format, retries)
+	job.Retries = job.Retries - 1
+	if job.Retries < 0 {
+		return job, Error("Exhausted all retries")
+	} else {
+		performWorkForFormat(job.format)
+
+		if (shouldFail()) {
+			retryFormat(job)
+		} else {
+			job.StatusMap[format] = models.StatusCompleted
+		}
+	}
+}
+
 func ProcessJob(jobID string, q *queue.JobQueue) {
 	job, ok := q.GetJob(jobID)
 	if !ok {
@@ -59,9 +75,14 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 		performWorkForFormat(format)
 
 		if (shouldFail()) {
-			retries = job.Retries
-			fmt.Printf("Job %s, format %s FAILED. Retrying %d more times\n", jobID, format, retries)
 			job.StatusMap[format] = models.StatusRetrying
+			job, err := retryFormat(job)
+			if err != nil {
+				job.StatusMap[format] = models.StatusCompleted
+			} else {
+				job.StatusMap[format] = models.StatusFailed
+				fmt.Printf("Job %s, format %s FAILED\n", jobID, format)
+			}
 		} else {
 			fmt.Printf("Job %s, format %s succeeded\n", jobID, format)
 			job.StatusMap[format] = models.StatusCompleted
