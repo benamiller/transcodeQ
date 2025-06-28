@@ -10,6 +10,12 @@ type JobQueue struct {
 	mu sync.Mutex
 }
 
+func NewJobQueue() *JobQueue {
+	return &JobQueue{
+		jobs: make(map[string]models.TranscodeJob),
+	}
+}
+
 func (q *JobQueue) AddJob(job models.TranscodeJob) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
