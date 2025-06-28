@@ -13,7 +13,6 @@ type CreateTranscodeJobRequest struct {
 	Title	string	`json:"title"`
 	Formats	[]string	`json:"formats"`
 }
-	
 
 type TranscodeJob struct {
 	ID	string	`json:"id"`
