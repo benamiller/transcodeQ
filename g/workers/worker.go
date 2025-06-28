@@ -1,6 +1,7 @@
 package workers
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"math/rand"
@@ -43,7 +44,7 @@ func shouldFail() bool {
 	return rand.Float64() < 0.05
 }
 
-func retryFormat(job models.TranscodeJob) (TranscodeJob, Error) {
+func retryFormat(job models.TranscodeJob) (models.TranscodeJob, Error) {
 	fmt.Printf("Job %s, format %s FAILED. Retrying %d more time(s)\n", jobID, format, retries)
 	job.Retries = job.Retries - 1
 	if job.Retries < 0 {
@@ -55,6 +56,7 @@ func retryFormat(job models.TranscodeJob) (TranscodeJob, Error) {
 			retryFormat(job)
 		} else {
 			job.StatusMap[format] = models.StatusCompleted
+			return job, nil
 		}
 	}
 }
