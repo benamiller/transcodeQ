@@ -50,14 +50,14 @@ func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 
 	newID := api.NextID()
 	newStatusMap := make(map[string]models.JobStatus)
-	for _, format := range req.formats {
+	for _, format := range req.Formats {
 		newStatusMap[format] = models.StatusQueued
 	}
 
 	job := models.TranscodeJob {
 		ID: newID,
-		Title: req.title,
-		Formats: req.formats,
+		Title: req.Title,
+		Formats: req.Formats,
 		StatusMap: newStatusMap,
 	}
 
