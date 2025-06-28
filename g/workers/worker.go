@@ -59,8 +59,9 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 		performWorkForFormat(format)
 
 		if (shouldFail()) {
-			fmt.Printf("Job %s, format %s FAILED\n", jobID, format)
-			job.StatusMap[format] = models.StatusFailed
+			retries = job.Retries
+			fmt.Printf("Job %s, format %s FAILED. Retrying %d more times\n", jobID, format, retries)
+			job.StatusMap[format] = models.StatusRetrying
 		} else {
 			fmt.Printf("Job %s, format %s succeeded\n", jobID, format)
 			job.StatusMap[format] = models.StatusCompleted
