@@ -31,18 +31,18 @@ func (api *API) JobsHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		id := r.URL.Query().Get("id")
 		format := r.URL.Query().Get("format")
+
 		if id != "" && format != "" {
 			api.GetJobFormatStatusHandler(w, r)
 			return
-		} else if id != "" {
+		if id != "" {
 			api.GetJobHandler(w, r)
 			return
-		} else {
-			api.ListJobsHandler(w, r)
-			return
-		}
+		api.ListJobsHandler(w, r)
+		return
 	default:
 		http.Error(w, "Method not supported", http.StatusMethodNotAllowed)
+		return
 	}
 
 }
