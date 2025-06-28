@@ -7,6 +7,7 @@ import (
 	"sync"
 	"github.com/benamiller/transcodeQ/g/models"
 	"github.com/benamiller/transcodeQ/g/queue"
+	"github.com/benamiller/transcodeQ/g/workers"
 )
 
 type API struct {
