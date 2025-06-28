@@ -48,8 +48,59 @@ func TestCreateJobHandler(t *testing.T) {
 	}
 
 	if job.StatusMap["720p"] != models.StatusQueued {
-		t.Errorf("expected 720p queue, got %s", job.StatusMap["720p"])
+		t.Errorf("expected 720p queued, got %s", job.StatusMap["720p"])
 	}
 }
 
+func TestGetJobHandler(t *testing.T) {
+	q := queue.NewJobQueue()
+	apiHandler := &API{
+		Queue: q,
+	}
+
+	statusMap := map[string]JobStatus{
+		"720p": models.StatusCompleted,
+		"1080p": models.StatusQueued
+	}
+
+	newJob := models.TranscodeJob{
+		ID	"1",
+		Title:	"Another video",
+		Formats: []string{"720p", "1080p"},
+		StatusMap: statusMap 
+	}
+
+	q.AddJob(newJob)
+
+	req := httptest.NewRequest("GET", "/jobs?id=1", nil)
+	rr := httptest.NewRecorder()
+
+	apiHandler.JobsHandler(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, get %d", rr.Code)
+	}
+
+	var fetched models.TranscodeJob
+	err := json.NewDecoder(rr.Body).Decode(&fetched)
+	if err != nil {
+		t.Fatalf("failed to parse response: %v", err)
+	}
+
+	if fetched.ID != "1" {
+		t.Errorf("expected job ID '1', got %s", fetched.ID)
+	}
+
+	if job.Title != "Another video" {
+		t.Errorf("expected title 'Another video', got %s", job.Title)
+	}
+
+	if len(job.Formats) != 2 {
+		t.Errorf("expected 2 formats, got %d", len(job.Formats))
+	}
+
+	if job.StatusMap["720p"] != models.StatusCompleted {
+		t.Errorf("expected 720p completed, got %s", job.StatusMap["720p"])
+	}
+}
 
