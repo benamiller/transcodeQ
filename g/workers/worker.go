@@ -45,7 +45,7 @@ func shouldFail() bool {
 }
 
 func retryFormat(job models.TranscodeJob, format string) (models.TranscodeJob, error) {
-	if job.Retries < 0 {
+	if job.Retries < 1 {
 		return job, errors.New("Exhausted all retries")
 	}
 	fmt.Printf("Job %s, format %s FAILED. Retrying %d more time(s)\n", job.ID, format, job.Retries)
@@ -82,8 +82,7 @@ func ProcessJob(jobID string, q *queue.JobQueue) {
 				job.StatusMap[format] = models.StatusFailed
 				fmt.Printf("Job %s, format %s FAILED. %s\n", jobID, format, err)
 			} else {
-				job.StatusMap[format] = models.StatusCompleted
-				fmt.Printf("Job %s, format %s FAILED\n", jobID, format)
+				fmt.Printf("Job %s, format %s succeeded\n", jobID, format)
 			}
 		} else {
 			fmt.Printf("Job %s, format %s succeeded\n", jobID, format)
