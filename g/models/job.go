@@ -20,4 +20,5 @@ type TranscodeJob struct {
 	Title	string	`json:"title"`
 	Formats	[]string	`json:"formats"`
 	StatusMap map[string]JobStatus `json:"status_map"`
+	Retries	int	`json:"retries"`
 }
