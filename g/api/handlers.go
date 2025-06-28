@@ -69,7 +69,7 @@ func (api *API) CreateJobHandler(w http.ResponseWriter, r *http.Request) {
 		Title: req.Title,
 		Formats: req.Formats,
 		StatusMap: newStatusMap,
-		Retries: 0,
+		Retries: 3,
 	}
 
 	api.Queue.AddJob(job)
