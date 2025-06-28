@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math"
 	"time"
-	"github.com/benamiller/transcodeQ/q/models"
-	"github.com/benamiller/transcodeQ/q/queue"
+	"github.com/benamiller/transcodeQ/g/models"
+	"github.com/benamiller/transcodeQ/g/queue"
 )
 
-func getIterationsForFormat(format string) {
+func getIterationsForFormat(format string) int {
 	var formatIterations = map[string]int{
 		"240p": 10_000,
 		"360p": 30_000,
@@ -24,7 +24,7 @@ func getIterationsForFormat(format string) {
 }
 
 func performWorkForFormat(format string) {
-	iterations := formatIterations[format]
+	iterations := getIterationsForFormat(format)
 	
 	var sum float64
 	for i := 0; i < iterations; i++ {
@@ -34,7 +34,7 @@ func performWorkForFormat(format string) {
 	time.Sleep(500 * time.Millisecond)
 }
 
-func ProcessJob(jodID string, q *queue.JobQueue) {
+func ProcessJob(jobID string, q *queue.JobQueue) {
 	job, ok := q.GetJob(jobID)
 	if !ok {
 		fmt.Printf("Job %s not found\n", jobID)
